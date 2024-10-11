@@ -1,7 +1,3 @@
-//
-// Created by alex on 08.10.24.
-//
-
 #include "../include/ShipSegment.h"
 
 ShipSegment::ShipSegment() :
@@ -13,20 +9,31 @@ int ShipSegment::getHP() {
 }
 
 void ShipSegment::damage() {
-    if (HP == 0) {
-        std::cout << "Segment is already destroyed!";
+    switch (state) {
+        case SegmentState::Undamaged:
+            setState(SegmentState::Damaged);
+            break;
+        case SegmentState::Damaged:
+            setState(SegmentState::Destroyed);
+            break;
+        case SegmentState::Destroyed:
+            throw std::runtime_error("Segment is already destroyed!");
     }
-    else {
-        HP--;
-    }
+    HP--;
 }
 
 void ShipSegment::printInfo() {
+    std::cout << "SEGMENT INFO" << std::endl;
     std::cout << "HP: " << HP << std::endl;
+    std::cout << "Coordinantes" << coordinates.x << "  " << coordinates.y << std::endl;
 }
 
 void ShipSegment::setCoordinates(Coordinates coords) {
     coordinates = coords;
+}
+
+void ShipSegment::setState(SegmentState segmentState) {
+    state = segmentState;
 }
 
 ShipSegment::~ShipSegment() = default;

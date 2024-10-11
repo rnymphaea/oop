@@ -4,14 +4,6 @@ Cell::Cell() : coordinates({0, 0}), visible(false), value(CellValue::Empty), seg
 
 Cell::~Cell() = default;
 
-//void Cell::setState(CellState cellState) {
-//    state = cellState;
-//}
-
-//CellState Cell::getState() {
-//    return state;
-//}
-
 void Cell::setValue(CellValue cellValue) {
     value = cellValue;
 }

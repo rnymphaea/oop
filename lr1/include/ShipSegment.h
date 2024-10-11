@@ -1,7 +1,3 @@
-//
-// Created by alex on 08.10.24.
-//
-
 #ifndef OOP_SHIPSEGMENT_H
 #define OOP_SHIPSEGMENT_H
 
@@ -16,6 +12,7 @@ public:
     void damage();
     void printInfo();
     void setCoordinates(Coordinates coordinates);
+    void setState(SegmentState segmentState);
 private:
     int HP;
     SegmentState state;

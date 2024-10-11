@@ -1,7 +1,3 @@
-//
-// Created by alex on 10.10.24.
-//
-
 #ifndef OOP_FIELD_H
 #define OOP_FIELD_H
 

@@ -1,7 +1,3 @@
-//
-// Created by alex on 10.10.24.
-//
-
 #include "../include/Field.h"
 #include <iostream>
 
