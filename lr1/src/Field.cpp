@@ -69,7 +69,9 @@ void Field::printField() {
 bool Field::isValidPlace(Coordinates coordinates, int length, Orientation orientation) {
     int startX = coordinates.x;
     int startY = coordinates.y;
-
+    if (startX > width || startY > height || startX < 0 || startY < 0) {
+        return false;
+    }
     if (orientation == Orientation::Vertical) {
         if (startY + length > height) {
             return false;

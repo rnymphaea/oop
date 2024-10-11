@@ -1,4 +1,3 @@
-
 #include "../include/ShipSegment.h"
 #include "../include/Ship.h"
 #include "../include/Field.h"
@@ -11,7 +10,7 @@ int main() {
         Field field;
         auto ships = manager.getShips();
         try {
-            field.placeShip({1, 1}, ships[0], Orientation::Horizontal);
+            field.placeShip({1, 30}, ships[0], Orientation::Horizontal);
             field.placeShip({3, 4}, ships[1]);
             field.placeShip({6, 8}, ships[2], Orientation::Horizontal);
             field.placeShip({1, 7}, ships[3]);
