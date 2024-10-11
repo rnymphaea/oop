@@ -16,7 +16,7 @@ int main() {
             field.placeShip({1, 7}, ships[3]);
             field.printField();
         }
-        catch (std::invalid_argument) {
+        catch (std::invalid_argument&) {
             std::cout << "Cannot place this segments!" << std::endl;
         }
         field.attack({2, 2});
@@ -24,7 +24,7 @@ int main() {
         field.attack({2, 1});
         field.printField();
     }
-    catch (std::invalid_argument) {
+    catch (std::invalid_argument&) {
         std::cout << "Invalid length of ship!";
     }
 }
