@@ -6,7 +6,7 @@
 class Scanner : public AbilityInterface{
 public:
     ~Scanner() = default;
-    void use() override;
+    void use(const AbilitySettings& settings) override;
 };
 
 #endif //LR2_SCANNER_H

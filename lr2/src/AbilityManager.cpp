@@ -1,9 +1,7 @@
 #include "../include/AbilityManager.h"
-#include "../include/DoubleDamage.h"
-#include "../include/Scanner.h"
-#include "../include/Bombing.h"
 
-void AbilityManager::addAbility() {
+
+std::shared_ptr<AbilityInterface> AbilityManager::addAbility() {
     std::srand(static_cast<unsigned int>(std::time(0)));
     int randomNumber = std::rand() % 3;
 
@@ -20,14 +18,15 @@ void AbilityManager::addAbility() {
             break;
     }
     abilitiesQueue.push(ability);
+    return ability;
 }
 
-void AbilityManager::useNextAbility() {
+void AbilityManager::useNextAbility(const AbilitySettings& settings) {
     if (!abilitiesQueue.empty()) {
-        abilitiesQueue.front() -> use();
+        abilitiesQueue.front() -> use(settings);
         abilitiesQueue.pop();
     } else {
-        std::cout << "No abilities in the queue!" << std::endl;
+        throw NoAbilitiesError("You have no abilities right now!");
     }
 }
 

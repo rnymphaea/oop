@@ -127,7 +127,7 @@ void Field::placeShip(Coordinates coordinates, const std::shared_ptr<Ship>& ship
         }
     }
     else {
-        throw std::invalid_argument("Cannot place this ship!");
+        throw InvalidPlacementError("Cannot place this ship!");
     }
 }
 
@@ -135,14 +135,12 @@ void Field::attack(Coordinates coordinates, int damage) {
     int x = coordinates.x;
     int y = coordinates.y;
     if (x < 0 || x > width || y < 0 || y > height) {
-        throw std::invalid_argument("Invalid coordinates!");
+        throw InvalidAttackError("X or Y out of width / height");
     }
 
     auto cell = cells[y][x];
-    auto value = cell->getValue();
     auto segment = cell->getSegment();
     cell -> setVisibility();
-
     if (!segment) {
         std::cout << "Miss" << std::endl;
         return;
@@ -167,6 +165,23 @@ void Field::setVisibility() {
             cells[i][j]->setVisibility();
         }
     }
+}
+
+bool Field::checkArea(Coordinates coords) {
+    int x = coords.x;
+    int y = coords.y;
+    if (x > width || x + 1 > width || y > height || y + 1 > height) {
+        std::cout << "Invalid coordinates";
+        return false;
+    }
+    if (cells[y][x]->getSegment() || cells[y + 1][x]->getSegment() || cells[y][x + 1]->getSegment() || cells[y+1][x+1]->getSegment()) {
+        return true;
+    }
+    return false;
+}
+
+std::shared_ptr<Cell> Field::getCell(Coordinates coords) {
+    return cells[coords.y][coords.x];
 }
 
 Field::~Field() = default;

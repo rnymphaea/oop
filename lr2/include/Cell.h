@@ -15,6 +15,7 @@ public:
     void setSegment(std::shared_ptr<ShipSegment> seg);
     CellValue getValue();
     std::shared_ptr<ShipSegment> getSegment();
+    void updateValue();
 private:
     Coordinates coordinates;
     CellValue value;

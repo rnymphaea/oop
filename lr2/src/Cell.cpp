@@ -24,6 +24,25 @@ CellValue Cell::getValue() {
     return value;
 }
 
+void Cell::updateValue() {
+    if (!segment) {
+        value = CellValue::Empty;
+        return;
+    }
+    switch (segment->getHP()) {
+        case 2:
+            value = CellValue::Segment;
+            break;
+        case 1:
+            value = CellValue::Hit;
+            break;
+        case 0:
+            value = CellValue::Destroyed;
+            break;
+    }
+
+}
+
 std::shared_ptr<ShipSegment> Cell:: getSegment() {
     return segment;
 }

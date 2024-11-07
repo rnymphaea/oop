@@ -21,6 +21,8 @@ public:
     bool isValidPlace(Coordinates coordinates, int length, Orientation orientation);
     void placeShip(Coordinates coordinates, const std::shared_ptr<Ship>& ship, Orientation orientation = Orientation::Vertical);
     void attack(Coordinates coordinates, int damage = 1);
+    bool checkArea(Coordinates coords);
+    std::shared_ptr<Cell> getCell(Coordinates coords);
 
     void setVisibility();
     void printField();

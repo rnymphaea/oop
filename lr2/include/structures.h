@@ -2,6 +2,9 @@
 #define OOP_STRUCTURES_H
 
 #include <iostream>
+#include "InvalidPlacementError.h"
+#include "InvalidAttackError.h"
+#include "NoAbilitiesError.h"
 
 enum class SegmentState{Undamaged, Damaged, Destroyed};
 

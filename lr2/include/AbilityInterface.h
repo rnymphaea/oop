@@ -4,10 +4,11 @@
 #include <queue>
 #include <memory>
 #include <iostream>
+#include "AbilitySettings.h"
 
 class AbilityInterface {
 public:
-    virtual void use() = 0;
+    virtual void use(const AbilitySettings& settings) = 0;
     virtual ~AbilityInterface() = default;
 };
 

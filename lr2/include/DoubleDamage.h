@@ -6,7 +6,7 @@
 class DoubleDamage : public AbilityInterface{
 public:
     ~DoubleDamage() = default;
-    void use() override;
+    void use(const AbilitySettings& settings) override;
 };
 
 #endif //LR2_DOUBLEDAMAGE_H
