@@ -15,18 +15,18 @@ int main() {
     auto ships = shipManager.getShips();
 
     int damage = 1;
-    AbilitySettings abilitySettings = {{1, 2}, field, &damage};
+    AbilitySettings abilitySettings = {{10, 122}, field, &damage};
 
     try {
         field.placeShip({1, 2}, ships[0], Orientation::Horizontal);
         field.placeShip({3, 4}, ships[1]);
-        field.placeShip({6, 8}, ships[2], Orientation::Horizontal);
+        field.placeShip({8, 8}, ships[2], Orientation::Horizontal);
         field.placeShip({1, 7}, ships[3]);
         field.setVisibility();
         field.printField();
     }
-    catch (std::invalid_argument&) {
-        std::cout << "Cannot place this segments!" << std::endl;
+    catch (InvalidPlacementError& err) {
+        std::cout << err.what() << std::endl;
     }
 
     try {

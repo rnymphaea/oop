@@ -170,13 +170,34 @@ void Field::setVisibility() {
 bool Field::checkArea(Coordinates coords) {
     int x = coords.x;
     int y = coords.y;
-    if (x > width || x + 1 > width || y > height || y + 1 > height) {
-        std::cout << "Invalid coordinates";
+    if (x >= width || y >= height) {
+        std::cout << "Invalid coordinates" << std::endl;
         return false;
     }
-    if (cells[y][x]->getSegment() || cells[y + 1][x]->getSegment() || cells[y][x + 1]->getSegment() || cells[y+1][x+1]->getSegment()) {
+    if (cells[y][x]->getSegment()) {
         return true;
     }
+
+    if (y + 1 < height) {
+        if (cells[y + 1][x]->getSegment()) {
+            return true;
+        }
+    }
+    if (x + 1 < width) {
+        if (cells[y][x + 1]->getSegment()) {
+            return true;
+        }
+    }
+
+    if (x + 1 < width && y + 1 < height) {
+        if (cells[y+1][x+1]->getSegment()) {
+            return true;
+        }
+    }
+
+//    if (cells[y][x]->getSegment() || cells[y + 1][x]->getSegment() || cells[y][x + 1]->getSegment() || cells[y+1][x+1]->getSegment()) {
+//        return true;
+//    }
     return false;
 }
 
