@@ -1,7 +1,7 @@
 #include "../include/AbilityManager.h"
 
 
-std::shared_ptr<AbilityInterface> AbilityManager::addAbility() {
+void AbilityManager::addAbility() {
     std::srand(static_cast<unsigned int>(std::time(0)));
     int randomNumber = std::rand() % 3;
 
@@ -18,7 +18,6 @@ std::shared_ptr<AbilityInterface> AbilityManager::addAbility() {
             break;
     }
     abilitiesQueue.push(ability);
-    return ability;
 }
 
 void AbilityManager::useNextAbility(const AbilitySettings& settings) {

@@ -5,7 +5,7 @@
 #include "../include/AbilityManager.h"
 
 int main() {
-    std::vector<int> lengths = {4, 3, 2, 1};
+    std::vector<int> lengths = {4, 3, 2, 1, 1};
     ShipManager shipManager(lengths);
     AbilityManager abilityManager;
     abilityManager.addAbility();
@@ -17,14 +17,17 @@ int main() {
     int damage = 1;
     AbilitySettings abilitySettings = {{10, 122}, field, &damage};
 
+    field.placeShip({1, 2}, ships[0], Orientation::Horizontal);
+    field.placeShip({3, 4}, ships[1]);
+    field.placeShip({8, 8}, ships[2], Orientation::Horizontal);
+    field.placeShip({1, 7}, ships[3]);
+    field.setVisibility();
+    field.printField();
+
     try {
-        field.placeShip({1, 2}, ships[0], Orientation::Horizontal);
-        field.placeShip({3, 4}, ships[1]);
-        field.placeShip({8, 8}, ships[2], Orientation::Horizontal);
-        field.placeShip({1, 7}, ships[3]);
-        field.setVisibility();
-        field.printField();
+        field.placeShip({99, 4}, ships[4]);
     }
+
     catch (InvalidPlacementError& err) {
         std::cout << err.what() << std::endl;
     }

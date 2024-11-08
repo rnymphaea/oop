@@ -135,7 +135,7 @@ void Field::attack(Coordinates coordinates, int damage) {
     int x = coordinates.x;
     int y = coordinates.y;
     if (x < 0 || x > width || y < 0 || y > height) {
-        throw InvalidAttackError("X or Y out of width / height");
+        throw InvalidAttackError("coordinate X or Y of attack is out of bounds");
     }
 
     auto cell = cells[y][x];
@@ -195,9 +195,6 @@ bool Field::checkArea(Coordinates coords) {
         }
     }
 
-//    if (cells[y][x]->getSegment() || cells[y + 1][x]->getSegment() || cells[y][x + 1]->getSegment() || cells[y+1][x+1]->getSegment()) {
-//        return true;
-//    }
     return false;
 }
 

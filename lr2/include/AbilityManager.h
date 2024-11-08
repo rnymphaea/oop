@@ -15,8 +15,7 @@ private:
 
 public:
     AbilityManager() = default;
-//    void addAbility();
-    std::shared_ptr<AbilityInterface> addAbility();
+    void addAbility();
     void useNextAbility(const AbilitySettings& settings);
     bool isEmpty() const;
 };
