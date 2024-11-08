@@ -1,5 +1,10 @@
 #include "../include/AbilityManager.h"
 
+AbilityManager::AbilityManager() {
+    abilitiesQueue.push(std::make_shared<DoubleDamage>());
+    abilitiesQueue.push(std::make_shared<Scanner>());
+    abilitiesQueue.push(std::make_shared<Bombing>());
+}
 
 void AbilityManager::addAbility() {
     std::srand(static_cast<unsigned int>(std::time(0)));

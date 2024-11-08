@@ -14,7 +14,7 @@ private:
     std::queue<std::shared_ptr<AbilityInterface>> abilitiesQueue;
 
 public:
-    AbilityManager() = default;
+    AbilityManager();
     void addAbility();
     void useNextAbility(const AbilitySettings& settings);
     bool isEmpty() const;

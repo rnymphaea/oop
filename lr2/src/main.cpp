@@ -8,14 +8,13 @@ int main() {
     std::vector<int> lengths = {4, 3, 2, 1, 1};
     ShipManager shipManager(lengths);
     AbilityManager abilityManager;
-    abilityManager.addAbility();
     std::shared_ptr<AbilityInterface> currentAbility;
     Field field;
 
     auto ships = shipManager.getShips();
 
     int damage = 1;
-    AbilitySettings abilitySettings = {{10, 122}, field, &damage};
+    AbilitySettings abilitySettings = {{1, 1}, field, &damage};
 
     field.placeShip({1, 2}, ships[0], Orientation::Horizontal);
     field.placeShip({3, 4}, ships[1]);
@@ -45,7 +44,7 @@ int main() {
     abilityManager.useNextAbility(abilitySettings);
 
     field.attack({1, 7}, damage);
-    field.attack({1, 7}, damage);
+    field.attack({1, 7});
     if (shipManager.getShipByCoordinates({1, 7})->isDestroyed()) {
         std::cout << "Ability added! " << std::endl;
         abilityManager.addAbility();
@@ -55,6 +54,11 @@ int main() {
     field.attack({1, 2}, damage);
 
     try {
+        abilityManager.useNextAbility(abilitySettings);
+        abilityManager.useNextAbility(abilitySettings);
+        abilityManager.useNextAbility(abilitySettings);
+        abilityManager.useNextAbility(abilitySettings);
+        abilityManager.useNextAbility(abilitySettings);
         abilityManager.useNextAbility(abilitySettings);
     }
     catch (NoAbilitiesError& err) {
