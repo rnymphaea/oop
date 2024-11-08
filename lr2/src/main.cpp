@@ -21,7 +21,7 @@ int main() {
     field.placeShip({3, 4}, ships[1]);
     field.placeShip({8, 8}, ships[2], Orientation::Horizontal);
     field.placeShip({1, 7}, ships[3]);
-    field.setVisibility();
+//    field.setVisibility();
     field.printField();
 
     try {
@@ -45,7 +45,9 @@ int main() {
     abilityManager.useNextAbility(abilitySettings);
 
     field.attack({1, 7}, damage);
+    field.attack({1, 7}, damage);
     if (shipManager.getShipByCoordinates({1, 7})->isDestroyed()) {
+        std::cout << "Ability added! " << std::endl;
         abilityManager.addAbility();
     }
 
