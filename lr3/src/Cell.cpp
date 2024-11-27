@@ -16,6 +16,10 @@ void Cell::setVisibility() {
     visible = true;
 }
 
+void Cell::setInvisibility() {
+    visible = false;
+}
+
 void Cell::setSegment(std::shared_ptr<ShipSegment> seg) {
     segment = seg;
 }

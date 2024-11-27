@@ -11,15 +11,15 @@ Field::Field() : height(10), width(10) {
     }
 }
 
-Field::Field(int height, int width) : height(height), width(width){
-    cells.resize(height);
-    for (int i = 0; i < height; i++) {
-        cells[i].resize(width);
-        for (int j = 0; j < height; j++) {
-            cells[i][j] = std::make_shared<Cell>();
-        }
-    }
-}
+//Field::Field(int height, int width) : height(height), width(width){
+//    cells.resize(height);
+//    for (int i = 0; i < height; i++) {
+//        cells[i].resize(width);
+//        for (int j = 0; j < height; j++) {
+//            cells[i][j] = std::make_shared<Cell>();
+//        }
+//    }
+//}
 
 Field::Field(const Field &other)
         : height(other.height),
@@ -163,6 +163,14 @@ void Field::setVisibility() {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < height; j++) {
             cells[i][j]->setVisibility();
+        }
+    }
+}
+
+void Field::setInvisibility() {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < height; j++) {
+            cells[i][j]->setInvisibility();
         }
     }
 }

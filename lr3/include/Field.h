@@ -10,6 +10,7 @@
 class Field {
 public:
     Field();
+//    Field()
     Field(const Field& other);
     Field(Field&& other);
     ~Field();
@@ -24,6 +25,7 @@ public:
     std::shared_ptr<Cell> getCell(Coordinates coords);
 
     void setVisibility();
+    void setInvisibility();
     void printField();
 
 private:

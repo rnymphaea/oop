@@ -1,42 +1,58 @@
 #include "../include/Game.h"
 
 void Game::CycleGame() {
-    int n = getNumberShips();
-    auto lengths = getLengths(n);
-    playerTurn = true;
-    bool stop;
-    GameState gs(lengths);
-    gameState = &gs;
-    auto playerShips = gs.getPlayerShipManager()->getShips();
-    auto compShips = gs.getCompShipManager()->getShips();
-    placeShips(playerShips, n);
-    placeShips(compShips, n);
-//    while (!stop) {
-//
-//    }
+    int n = getNumberShips();                // Получаем количество кораблей
+    auto lengths = getLengths(n);           // Получаем длины кораблей
+    playerTurn = true;                       // Ход игрока
+    bool stop = false;
+
+    // Создаем GameState и сохраняем в shared_ptr
+    gameState = std::make_shared<GameState>(lengths);
+
+    // Получаем ссылки на корабли через геттеры GameState
+    auto playerShips = gameState->getPlayerShipManager()->getShips();
+    auto compShips = gameState->getCompShipManager()->getShips();
+
+    // Размещаем корабли
+    placeShips(n);
+    playerTurn = !playerTurn;
+    placeShips(n);
+
+    // Пример: дальнейшая логика обработки
     int damage = 1;
 
+    while (!stop) {
+        if (playerTurn) {
+            std::cout << "Choose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n" << std::endl;
+            Action action = getAction();
+            switch (action) {
+                case Attack:
+                    std::cout << "Attacking" << std::endl;
+                    attack();
+                    break;
+                case Save:
+                    std::cout << "Saving" << std::endl;
+                    break;
+                case Load:
+                    std::cout << "Loading" << std::endl;
+                    break;
+                case Ability:
+                    std::cout << "Ability" << std::endl;
+                    break;
+                case Exit:
+                    std::cout << "Bye <3" << std::endl;
+                    stop = true;
+                    break;
+            }
+        } else {
+            attack();
+        }
 
-
-
-//    std::cout << "Choose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n" << std::endl;
-//    Action action = getAction();
-//    switch (action) {
-//        case Attack:
-//            std::cout << "Attacking" << std::endl;
-//            break;
-//        case Save:
-//            std::cout << "Saving" << std::endl;
-//            break;
-//        case Load:
-//            std::cout << "Loading" << std::endl;
-//            break;
-//        case Ability:
-//            std::cout << "Ability" << std::endl;
-//            break;
-//    }
+         playerTurn = !playerTurn;
+    }
 
 }
+
 
 Coordinates Game::getCoordinates() {
     Coordinates coords;
@@ -93,15 +109,18 @@ int Game::getNumberShips() {
     return n;
 }
 
-void Game::placeShips(std::vector<std::shared_ptr<Ship>> ships, int size) {
-    Field * field;
+void Game::placeShips(int size) {
+    std::shared_ptr<Field> field;
     Coordinates coords;
     Orientation orientation;
+    std::vector<std::shared_ptr<Ship>> ships;
     if (playerTurn) {
         field = gameState->getPlayerField();
+        ships = gameState->getPlayerShipManager()->getShips();
     }
     else {
         field = gameState->getCompField();
+        ships = gameState->getCompShipManager()->getShips();
     }
 
     for (int i = 0; i < size; i++) {
@@ -122,13 +141,25 @@ void Game::placeShips(std::vector<std::shared_ptr<Ship>> ships, int size) {
             try {
                 field->placeShip(coords, ships[i], orientation);
                 field->setVisibility();
-                field->printField();
+                if (playerTurn) {
+                    field->printField();
+                }
                 isPlaced = true;
             }
             catch (InvalidPlacementError &err) {
-                std::cout << err.what() << std::endl;
+                if (playerTurn) {
+                    std::cout << err.what() << std::endl;
+                }
             }
         }
+    }
+    if (playerTurn) {
+        std::cout << "============== Your field ==============" << std::endl;
+        field->printField();
+    } else {
+        std::cout << "============== Computer's field ==============" << std::endl;
+        field->printField();
+        field->setInvisibility();
     }
 
 }
@@ -153,22 +184,33 @@ Orientation Game::getOrientation() {
 
 void Game::attack(int damage) {
     Coordinates coords;
+    std::shared_ptr<Field> field;
     if (playerTurn) {
+        std::cout << "Enter coordinates for attack: ";
         coords = getCoordinates();
+        field = gameState->getCompField();
         try {
-            gameState->getCompField()->attack(coords, damage);
-            if (gameState->getCompShipManager()->getShipByCoordinates({1, 7})->isDestroyed()) {
-                std::cout << "Ability added! " << std::endl;
-                gameState->getAbilityManager()->addAbility();
+            field->attack(coords, damage);
+            auto ship = gameState->getCompShipManager()->getShipByCoordinates({coords});
+            if (ship) {
+                if (ship->isDestroyed()) {
+                    std::cout << "Ability added! " << std::endl;
+                    gameState->getAbilityManager()->addAbility();
+                }
             }
+
+            std::cout << "Attack ended!" << std::endl;
         }
         catch (InvalidAttackError & err) {
             std::cout << err.what() << std::endl;
         }
+        field->printField();
     }
     else {
+        field = gameState->getPlayerField();
         coords = getRandomCoordinates();
-        gameState->getPlayerField()->attack(coords);
+        std::cout << "Computer attacks " << coords.x << " " << coords.y << std::endl;
+        field->attack(coords);
     }
 
 }

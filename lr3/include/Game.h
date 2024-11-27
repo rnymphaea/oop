@@ -9,9 +9,10 @@
 
 #include <random>
 #include <ctime>
+#include <memory>
 
 enum Action {
-    Save, Load, Attack, Ability
+    Save, Load, Attack, Ability, Exit
 };
 
 class Game {
@@ -20,15 +21,15 @@ public:
     void CycleGame();
 private:
     bool playerTurn;
-    GameState * gameState;
+    std::shared_ptr<GameState> gameState;
     Coordinates getCoordinates();
     Action getAction();
     void save();
     std::vector<int> getLengths(int n);
     int getNumberShips();
-    void placeShips(std::vector<std::shared_ptr<Ship>> ships, int size);
+    void placeShips(int size);
     Orientation getOrientation();
-    void attack(int damage);
+    void attack(int damage = 1);
     Coordinates getRandomCoordinates();
 };
 

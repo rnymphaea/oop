@@ -1,34 +1,28 @@
 #include "../include/GameState.h"
 
-GameState::GameState(std::vector<int> lengths) {
-    ShipManager sm1(lengths);
-    playerShipManager = &sm1;
-    ShipManager sm2(lengths);
-    compShipManager = &sm2;
-    AbilityManager am;
-    abilityManager = &am;
-    auto field1 = Field{};
-    auto field2 = Field{};
-    playerField = &field1;
-    compField = &field2;
-}
+GameState::GameState(std::vector<int> lengths)
+        : playerShipManager(std::make_shared<ShipManager>(lengths)),
+          compShipManager(std::make_shared<ShipManager>(lengths)),
+          abilityManager(std::make_shared<AbilityManager>()),
+          playerField(std::make_shared<Field>()),
+          compField(std::make_shared<Field>()) { }
 
-ShipManager * GameState::getPlayerShipManager() {
+std::shared_ptr<ShipManager> GameState::getPlayerShipManager() const {
     return playerShipManager;
 }
 
-ShipManager * GameState::getCompShipManager() {
-    return playerShipManager;
+std::shared_ptr<ShipManager> GameState::getCompShipManager() const {
+    return compShipManager;
 }
 
-AbilityManager * GameState::getAbilityManager() {
+std::shared_ptr<AbilityManager> GameState::getAbilityManager() const {
     return abilityManager;
 }
 
-Field * GameState::getPlayerField() {
+std::shared_ptr<Field> GameState::getPlayerField() const {
     return playerField;
 }
 
-Field * GameState::getCompField() {
+std::shared_ptr<Field> GameState::getCompField() const {
     return compField;
 }

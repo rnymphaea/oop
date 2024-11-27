@@ -16,6 +16,7 @@ public:
     CellValue getValue();
     std::shared_ptr<ShipSegment> getSegment();
     void updateValue();
+    void setInvisibility();
 private:
     Coordinates coordinates;
     CellValue value;

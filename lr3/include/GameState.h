@@ -3,22 +3,28 @@
 
 #include "ShipManager.h"
 #include "AbilityManager.h"
-#include "Field.h"
+#include <memory>
+#include <vector>
+
+class ShipManager;
+class AbilityManager;
+class Field;
 
 class GameState {
 public:
-    GameState(std::vector<int> lengths);
-    ShipManager* getPlayerShipManager();
-    ShipManager* getCompShipManager();
-    Field* getPlayerField();
-    Field* getCompField();
-    AbilityManager* getAbilityManager();
-private:
-    ShipManager * playerShipManager;
-    ShipManager * compShipManager;
-    Field * playerField;
-    Field * compField;
-    AbilityManager * abilityManager;
-};
+    explicit GameState(std::vector<int> lengths);
 
-#endif //LR3_GAMESTATE_H
+    std::shared_ptr<ShipManager> getPlayerShipManager() const;
+    std::shared_ptr<ShipManager> getCompShipManager() const;
+    std::shared_ptr<AbilityManager> getAbilityManager() const;
+    std::shared_ptr<Field> getPlayerField() const;
+    std::shared_ptr<Field> getCompField() const;
+
+private:
+    std::shared_ptr<ShipManager> playerShipManager;
+    std::shared_ptr<ShipManager> compShipManager;
+    std::shared_ptr<AbilityManager> abilityManager;
+    std::shared_ptr<Field> playerField;
+    std::shared_ptr<Field> compField;
+};
+#endif
