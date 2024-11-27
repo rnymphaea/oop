@@ -7,6 +7,7 @@ AbilityManager::AbilityManager() {
 }
 
 void AbilityManager::addAbility() {
+    std::cout << "Added new ability: ";
     std::srand(static_cast<unsigned int>(std::time(0)));
     int randomNumber = std::rand() % 3;
 
@@ -14,12 +15,15 @@ void AbilityManager::addAbility() {
     switch (randomNumber) {
         case 0:
             ability = std::make_shared<DoubleDamage>();
+            std::cout << "Double damage" << std::endl;
             break;
         case 1:
             ability = std::make_shared<Scanner>();
+            std::cout << "Scanner" << std::endl;
             break;
         case 2:
             ability = std::make_shared<Bombing>();
+            std::cout << "Bombing" << std::endl;
             break;
     }
     abilitiesQueue.push(ability);
