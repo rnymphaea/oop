@@ -42,5 +42,20 @@ bool Ship::isDestroyed() {
     return true;
 }
 
+void Ship::setOrientation(Orientation o) {
+    orientation = o;
+}
+
+std::string Ship::getInfo() {
+    std::string out;
+    out += std::to_string(length) + " " + std::to_string(static_cast<int>(orientation)) + " " + std::to_string(head.x)  + " " + std::to_string(head.y);
+//    for (const auto segment : segments) {
+//        int x = segment->getCoordinates().x;
+//        int y = segment->getCoordinates().y;
+//        out += std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(segment->getHP()) + "\t";
+//    }
+    return out;
+}
+
 Ship::~Ship() = default;
 

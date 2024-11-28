@@ -7,6 +7,7 @@ Field::Field() : height(10), width(10) {
         cells[i].resize(width);
         for (int j = 0; j < width; j++) {
             cells[i][j] = std::make_shared<Cell>();
+            cells[i][j] ->setCoordinates(Coordinates{i,j});
         }
     }
 }
@@ -111,6 +112,7 @@ void Field::placeShip(Coordinates coordinates, const std::shared_ptr<Ship>& ship
     int x = coordinates.x;
     int y = coordinates.y;
     auto segments = ship->getSegments();
+    ship->setOrientation(orientation);
     if (isValidPlace(coordinates, length, orientation)) {
         ship ->setCoordinates(coordinates);
         for (int i = 0; i < length; i++) {
@@ -118,11 +120,13 @@ void Field::placeShip(Coordinates coordinates, const std::shared_ptr<Ship>& ship
                 cells[y+i][x]->setValue(CellValue::Segment);
                 cells[y+i][x]->setSegment(segments[i]);
                 segments[i]->setCoordinates({x, y+i});
+//                std::cout << segments[i] << " " << cells[y+i][x]->getSegment();
             }
             else {
                 cells[y][x+i]->setValue(CellValue::Segment);
                 cells[y][x+i]->setSegment(segments[i]);
                 segments[i]->setCoordinates({x+i, y});
+//                std::cout << segments[i] << " " << cells[y][x + i]->getSegment();
             }
         }
     }
@@ -161,7 +165,7 @@ void Field::attack(Coordinates coordinates, int damage) {
 
 void Field::setVisibility() {
     for (int i = 0; i < height; i++) {
-        for (int j = 0; j < height; j++) {
+        for (int j = 0; j < width; j++) {
             cells[i][j]->setVisibility();
         }
     }
@@ -169,10 +173,14 @@ void Field::setVisibility() {
 
 void Field::setInvisibility() {
     for (int i = 0; i < height; i++) {
-        for (int j = 0; j < height; j++) {
+        for (int j = 0; j < width; j++) {
             cells[i][j]->setInvisibility();
         }
     }
+}
+
+void Field::loadCellValue(Coordinates coords, CellValue cellValue, bool visibility) {
+    cells[coords.y][coords.x]->loadValue(cellValue, visibility);
 }
 
 bool Field::checkArea(Coordinates coords) {

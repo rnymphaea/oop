@@ -9,6 +9,10 @@ ShipManager::ShipManager(const std::vector<int>& lengths) {
     }
 }
 
+ShipManager::ShipManager(const std::vector<std::shared_ptr<Ship>> Ships) {
+    ships = Ships;
+}
+
 const std::vector<std::shared_ptr<Ship>>& ShipManager::getShips() const {
     return ships;
 }
@@ -27,5 +31,22 @@ const std::shared_ptr<Ship> ShipManager::getShipByCoordinates(Coordinates coords
 void ShipManager::printShips() const {
     for (const auto &ship: ships) {
         ship->printInfoShip();
+    }
+}
+
+bool ShipManager::allShipsDestroyed() {
+    bool check = false;
+    for (const auto &ship: ships) {
+        if (!ship->isDestroyed()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string ShipManager::getInfo() {
+    std::string out;
+    for (const auto &ship: ships) {
+        out += ship->getInfo();
     }
 }

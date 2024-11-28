@@ -7,7 +7,8 @@
 
 int main() {
     Game game;
-    game.CycleGame();
+//    game.CycleGame();
+    game.NewRound();
 //    std::vector<int> lengths = {4, 3, 2, 1, 1};
 //    ShipManager shipManager(lengths);
 //    AbilityManager abilityManager;

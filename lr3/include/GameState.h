@@ -5,6 +5,8 @@
 #include "AbilityManager.h"
 #include <memory>
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 class ShipManager;
 class AbilityManager;
@@ -19,8 +21,18 @@ public:
     std::shared_ptr<AbilityManager> getAbilityManager() const;
     std::shared_ptr<Field> getPlayerField() const;
     std::shared_ptr<Field> getCompField() const;
+    void newCompShipManager();
+    void newCompField();
+    std::vector<int> getSizes();
+
+    friend std::ostream& operator<<(std::ostream& out, const GameState& state);
+    friend std::istream& operator>>(std::istream& in, GameState& state);
+
+    void save(const std::string& filename = "save");
+    void load(const std::string& filename = "save");
 
 private:
+    std::vector<int> sizes;
     std::shared_ptr<ShipManager> playerShipManager;
     std::shared_ptr<ShipManager> compShipManager;
     std::shared_ptr<AbilityManager> abilityManager;

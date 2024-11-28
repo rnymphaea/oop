@@ -13,10 +13,12 @@ public:
     void setVisibility();
     void setValue(CellValue cellValue);
     void setSegment(std::shared_ptr<ShipSegment> seg);
+    void setCoordinates(Coordinates coords);
     CellValue getValue();
     std::shared_ptr<ShipSegment> getSegment();
     void updateValue();
     void setInvisibility();
+    void loadValue(CellValue cellValue, bool visibility);
 private:
     Coordinates coordinates;
     CellValue value;

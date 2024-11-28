@@ -19,6 +19,8 @@ public:
     void setCoordinates(Coordinates start);
     Coordinates getCoordinates();
     bool isDestroyed();
+    std::string getInfo();
+    void setOrientation(Orientation o);
 private:
     std::vector<std::shared_ptr<ShipSegment>> segments;
     int length;

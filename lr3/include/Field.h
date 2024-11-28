@@ -22,6 +22,7 @@ public:
     void attack(Coordinates coordinates, int damage = 1);
     bool checkArea(Coordinates coords);
     std::shared_ptr<Cell> getCell(Coordinates coords);
+    void loadCellValue(Coordinates coords, CellValue cellValue, bool visibility);
 
     void setVisibility();
     void setInvisibility();

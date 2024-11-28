@@ -18,8 +18,10 @@ enum Action {
 class Game {
 public:
     Game() = default;
-    void CycleGame();
+    bool CycleGame(int n, bool playerWon, bool firstRound);
+    void NewRound();
 private:
+    bool isLoaded;
     bool playerTurn;
     std::shared_ptr<GameState> gameState;
     Coordinates getCoordinates();
@@ -29,7 +31,8 @@ private:
     int getNumberShips();
     void placeShips(int size);
     Orientation getOrientation();
-    void attack(int damage = 1);
+    bool attack(int damage = 1);
+    bool gameEnded();
     Coordinates getRandomCoordinates();
 };
 

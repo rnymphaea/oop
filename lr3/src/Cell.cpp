@@ -28,6 +28,24 @@ CellValue Cell::getValue() {
     return value;
 }
 
+void Cell::loadValue(CellValue cellValue, bool visibility) {
+    value = cellValue;
+    visible = visibility;
+    switch (value) {
+        case CellValue::Segment:
+            segment->setHP(2);
+            break;
+        case CellValue::Hit:
+            segment->setHP(1);
+            break;
+        case CellValue::Destroyed:
+            segment->setHP(0);
+            break;
+        case CellValue::Empty:
+            break;
+    }
+}
+
 void Cell::updateValue() {
     if (!segment) {
         value = CellValue::Empty;
@@ -45,6 +63,10 @@ void Cell::updateValue() {
             break;
     }
 
+}
+
+void Cell::setCoordinates(Coordinates coords) {
+    coordinates = coords;
 }
 
 std::shared_ptr<ShipSegment> Cell:: getSegment() {

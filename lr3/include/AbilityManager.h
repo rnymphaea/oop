@@ -16,9 +16,11 @@ private:
 
 public:
     AbilityManager();
+    AbilityManager(const std::vector<std::string>& info);
     void addAbility();
     void useNextAbility(const AbilitySettings& settings);
     bool isEmpty() const;
+    std::string getInfo();
 };
 
 #endif //ABILITYMANAGER_H

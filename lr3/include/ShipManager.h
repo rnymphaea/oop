@@ -8,9 +8,12 @@
 class ShipManager {
 public:
     ShipManager(const std::vector<int>& sizes);
+    ShipManager(const std::vector<std::shared_ptr<Ship>> Ships);
     const std::vector<std::shared_ptr<Ship>>& getShips() const;
     void printShips() const;
     const std::shared_ptr<Ship> getShipByCoordinates(Coordinates coords) const;
+    bool allShipsDestroyed();
+    std::string getInfo();
 private:
     std::vector<std::shared_ptr<Ship>> ships;
 };

@@ -1,39 +1,79 @@
 #include "../include/Game.h"
 
-void Game::CycleGame() {
+void Game::NewRound() {
     std::cout << "============= Battleship =============" << std::endl;
+    std::cout << "0 - New game\n1 - Load game" << std::endl;
+    int act;
+    std::cin >> act;
+    int n;
+    std::vector<int> lengths;
+    bool firstRound = true;
+    bool playerWon = false;
+    if (act == 1) {
+        gameState = std::make_shared<GameState>(lengths);
+        gameState->load();
+        isLoaded = true;
+        n = gameState->getPlayerShipManager()->getShips().size();
+        lengths = gameState->getSizes();
+    } else {
+        n = getNumberShips();
+        lengths = getLengths(n);
+        gameState = std::make_shared<GameState>(lengths);
+
+    }
+    while (true) {
+        playerWon = CycleGame(n, playerWon, firstRound);
+        firstRound = false;
+        if (playerWon) {
+            std::cout << "You won!" << std::endl;
+            gameState->newCompField();
+            gameState->newCompShipManager();
+            continue;
+        } else {
+            gameState = std::make_shared<GameState>(lengths);
+            std::cout << "You lose!" << std::endl;
+        }
+    }
+}
+
+bool Game::CycleGame(int n, bool playerWon, bool firstRound) {
     playerTurn = true;
     bool stop = false;
-
-    int n = getNumberShips();
-    auto lengths = getLengths(n);
-
-    gameState = std::make_shared<GameState>(lengths);
+    if (!firstRound && !playerWon && !isLoaded) {
+        n = getNumberShips();
+        auto lengths = getLengths(n);
+    }
 
     auto playerShips = gameState->getPlayerShipManager()->getShips();
     auto compShips = gameState->getCompShipManager()->getShips();
     auto abilityManager = gameState->getAbilityManager();
 
-    placeShips(n);
-    playerTurn = !playerTurn;
-    placeShips(n);
+    if ((firstRound || (!firstRound && !playerWon)) && !isLoaded) {
+        placeShips(n);
+    }
+    if (!isLoaded) {
+        playerTurn = !playerTurn;
+        placeShips(n);
+    }
 
     int damage = 1;
     AbilitySettings abilitySettings = {gameState->getCompField(), &damage};
-
-    while (!stop) {
+    playerWon = false;
+    while (!stop && !playerWon) {
         if (playerTurn) {
-            std::cout << "Choose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n 4 - Exit" << std::endl;
+            std::cout << "\nChoose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n 4 - Exit" << std::endl;
             Action action = getAction();
             switch (action) {
                 case Attack:
-                    attack();
+                    playerWon = attack();
                     break;
                 case Save:
                     std::cout << "Saving" << std::endl;
+                    gameState->save();
                     break;
                 case Load:
                     std::cout << "Loading" << std::endl;
+                    gameState->load();
                     break;
                 case Ability:
                     try {
@@ -43,7 +83,7 @@ void Game::CycleGame() {
                         std::cout << err.what() << std::endl;
                         break;
                     }
-                    attack(damage);
+                    playerWon = attack(damage);
                     damage = 1;
                     break;
                 case Exit:
@@ -55,9 +95,12 @@ void Game::CycleGame() {
             attack();
         }
 
-         playerTurn = !playerTurn;
-    }
 
+    }
+    if (stop) {
+        exit(0);
+    }
+    return playerWon;
 }
 
 
@@ -89,7 +132,7 @@ Action Game::getAction() {
         std::cin >> action;
 
         if (std::cin.fail() || action < 0 || action > 4) {
-            std::cout << "Ошибка! Пожалуйста, введите число от 0 до 4." << std::endl;
+            std::cout << "Enter a number between 0 and 4" << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {
@@ -102,7 +145,7 @@ Action Game::getAction() {
 std::vector<int> Game::getLengths(int n) {
     std::vector<int> lengths(n);
 
-    std::cout << "Введите длины кораблей: ";
+    std::cout << "Ship sizes: ";
     for (int i = 0; i < n; i++) {
         std::cin >> lengths[i];
     }
@@ -111,7 +154,7 @@ std::vector<int> Game::getLengths(int n) {
 
 int Game::getNumberShips() {
     int n;
-    std::cout << "Введите количество кораблей: ";
+    std::cout << "Count of ships: ";
     std::cin >> n;
     return n;
 }
@@ -189,7 +232,7 @@ Orientation Game::getOrientation() {
     return static_cast<Orientation>(orientation);
 }
 
-void Game::attack(int damage) {
+bool Game::attack(int damage) {
     Coordinates coords;
     std::shared_ptr<Field> field;
     if (playerTurn) {
@@ -219,7 +262,8 @@ void Game::attack(int damage) {
         std::cout << "Computer attacks " << coords.x << " " << coords.y << std::endl;
         field->attack(coords);
     }
-
+    playerTurn = !playerTurn;
+    return gameEnded();
 }
 
 Coordinates Game::getRandomCoordinates() {
@@ -227,4 +271,9 @@ Coordinates Game::getRandomCoordinates() {
     int x = std::rand() % 10;
     int y = std::rand() % 10;
     return Coordinates{x, y};
+}
+
+bool Game::gameEnded() {
+    return gameState->getCompShipManager()->allShipsDestroyed() || gameState->getPlayerShipManager()->allShipsDestroyed();
+
 }

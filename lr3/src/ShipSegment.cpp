@@ -32,5 +32,9 @@ void ShipSegment::setCoordinates(Coordinates coords) {
     coordinates = coords;
 }
 
+void ShipSegment::setHP(int hp) {
+    HP = hp;
+}
+
 ShipSegment::~ShipSegment() = default;
 

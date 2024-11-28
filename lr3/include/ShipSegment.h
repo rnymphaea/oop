@@ -13,6 +13,7 @@ public:
     void printInfo();
     Coordinates getCoordinates();
     void setCoordinates(Coordinates coords);
+    void setHP(int hp);
 private:
     int HP;
     Coordinates coordinates;
