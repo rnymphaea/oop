@@ -1,9 +1,27 @@
 #include "../include/AbilityManager.h"
 
 AbilityManager::AbilityManager() {
-    abilitiesQueue.push(std::make_shared<DoubleDamage>());
-    abilitiesQueue.push(std::make_shared<Scanner>());
-    abilitiesQueue.push(std::make_shared<Bombing>());
+//    abilitiesQueue.push(std::make_shared<DoubleDamage>());
+//    abilitiesQueue.push(std::make_shared<Scanner>());
+//    abilitiesQueue.push(std::make_shared<Bombing>());
+    std::vector<std::shared_ptr<AbilityInterface>> abilities = {
+            std::make_shared<DoubleDamage>(),
+            std::make_shared<Scanner>(),
+            std::make_shared<Bombing>()
+    };
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(abilities.begin(), abilities.end(), g);
+
+    for (const auto& ability : abilities) {
+        abilitiesQueue.push(ability);
+    }
+
+    std::cout << "Next ability: ";
+    if (!abilitiesQueue.empty()) {
+        abilitiesQueue.front()->info();
+    }
 }
 
 void AbilityManager::addAbility() {

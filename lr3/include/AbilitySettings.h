@@ -5,8 +5,7 @@
 #include "Field.h"
 
 struct AbilitySettings {
-    Coordinates coordinates;
-    Field & field;
+    std::shared_ptr<Field> field;
     int * damage;
 };
 

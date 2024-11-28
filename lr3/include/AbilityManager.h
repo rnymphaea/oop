@@ -8,6 +8,7 @@
 #include "structures.h"
 #include <random>
 #include <ctime>
+#include <algorithm>
 
 class AbilityManager {
 private:

@@ -1,33 +1,32 @@
 #include "../include/Game.h"
 
 void Game::CycleGame() {
-    int n = getNumberShips();                // Получаем количество кораблей
-    auto lengths = getLengths(n);           // Получаем длины кораблей
-    playerTurn = true;                       // Ход игрока
+    std::cout << "============= Battleship =============" << std::endl;
+    playerTurn = true;
     bool stop = false;
 
-    // Создаем GameState и сохраняем в shared_ptr
+    int n = getNumberShips();
+    auto lengths = getLengths(n);
+
     gameState = std::make_shared<GameState>(lengths);
 
-    // Получаем ссылки на корабли через геттеры GameState
     auto playerShips = gameState->getPlayerShipManager()->getShips();
     auto compShips = gameState->getCompShipManager()->getShips();
+    auto abilityManager = gameState->getAbilityManager();
 
-    // Размещаем корабли
     placeShips(n);
     playerTurn = !playerTurn;
     placeShips(n);
 
-    // Пример: дальнейшая логика обработки
     int damage = 1;
+    AbilitySettings abilitySettings = {gameState->getCompField(), &damage};
 
     while (!stop) {
         if (playerTurn) {
-            std::cout << "Choose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n" << std::endl;
+            std::cout << "Choose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n 4 - Exit" << std::endl;
             Action action = getAction();
             switch (action) {
                 case Attack:
-                    std::cout << "Attacking" << std::endl;
                     attack();
                     break;
                 case Save:
@@ -37,7 +36,15 @@ void Game::CycleGame() {
                     std::cout << "Loading" << std::endl;
                     break;
                 case Ability:
-                    std::cout << "Ability" << std::endl;
+                    try {
+                        abilityManager->useNextAbility(abilitySettings);
+                    }
+                    catch (NoAbilitiesError& err) {
+                        std::cout << err.what() << std::endl;
+                        break;
+                    }
+                    attack(damage);
+                    damage = 1;
                     break;
                 case Exit:
                     std::cout << "Bye <3" << std::endl;
@@ -81,8 +88,8 @@ Action Game::getAction() {
     while (!validInput) {
         std::cin >> action;
 
-        if (std::cin.fail() || action < 0 || action > 3) {
-            std::cout << "Ошибка! Пожалуйста, введите число от 0 до 3." << std::endl;
+        if (std::cin.fail() || action < 0 || action > 4) {
+            std::cout << "Ошибка! Пожалуйста, введите число от 0 до 4." << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {
@@ -171,10 +178,10 @@ Orientation Game::getOrientation() {
     while (!validInput) {
         std::cin >> orientation;
 
-        if (std::cin.fail() || orientation < 0 || orientation > 3) {
-            std::cout << "Ошибка! Пожалуйста, введите число от 0 до 1." << std::endl;
-            std::cin.clear();  // Сбрасываем флаг ошибки
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Игнорируем остаток ввода
+        if (std::cin.fail() || orientation < 0 || orientation > 1) {
+            std::cout << "Please enter 0 or 1." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {
             validInput = true;
         }

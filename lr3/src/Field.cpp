@@ -5,7 +5,7 @@ Field::Field() : height(10), width(10) {
     cells.resize(height);
     for (int i = 0; i < height; i++) {
         cells[i].resize(width);
-        for (int j = 0; j < height; j++) {
+        for (int j = 0; j < width; j++) {
             cells[i][j] = std::make_shared<Cell>();
         }
     }

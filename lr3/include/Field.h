@@ -10,7 +10,6 @@
 class Field {
 public:
     Field();
-//    Field()
     Field(const Field& other);
     Field(Field&& other);
     ~Field();
