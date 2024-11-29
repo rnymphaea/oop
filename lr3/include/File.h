@@ -1,7 +1,5 @@
 #ifndef LR3_FILE_H
 #define LR3_FILE_H
-#ifndef FILE_HPP
-#define FILE_HPP
 
 #include <fstream>
 #include <string>
@@ -27,5 +25,4 @@ public:
     std::ifstream& getInfile();
 };
 
-#endif
 #endif //LR3_FILE_H

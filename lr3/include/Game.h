@@ -1,6 +1,5 @@
 #ifndef LR3_GAME_H
 #define LR3_GAME_H
-
 #include "GameState.h"
 
 #include <random>

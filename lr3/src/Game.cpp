@@ -12,7 +12,13 @@ void Game::NewRound() {
     int state;
     if (act == 1) {
         gameState = std::make_shared<GameState>(lengths);
-        gameState->load();
+        try {
+            gameState->load();
+        }
+        catch (std::runtime_error &err) {
+            std::cout <<"Error loading" << std::endl;
+            return;
+        }
         isLoaded = true;
         n = gameState->getPlayerShipManager()->getShips().size();
         lengths = gameState->getSizes();
@@ -77,7 +83,13 @@ int Game::CycleGame(int n, bool playerWon, bool firstRound) {
                     break;
                 case Load:
                     std::cout << "Loading" << std::endl;
-                    gameState->load();
+                    try {
+                        gameState->load();
+                    }
+                    catch (std::runtime_error &err) {
+                        std::cout <<"Error loading" <<std::endl;
+                        break;
+                    }
                     break;
                 case Ability:
                     try {
