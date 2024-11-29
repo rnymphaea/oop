@@ -3,6 +3,7 @@
 
 #include "ShipManager.h"
 #include "AbilityManager.h"
+#include "File.h"
 #include <memory>
 #include <vector>
 #include <fstream>
