@@ -194,27 +194,6 @@ void GameState::load(const std::string& filename) {
     compField->printField();
 }
 
-//void GameState::save(const std::string& filename) {
-//    std::ofstream f(filename + ".txt");
-//    if (!f.is_open()) {
-//        std::cout << "Ошибка открытия файла " + filename + ".txt\n";
-//    }
-//    f << *this;
-//    f.close();
-//}
-//
-//void GameState::load(const std::string& filename) {
-//    std::ifstream f(filename + ".txt");
-//    if (!f.is_open()) {
-//        std::cout << "Ошибка открытия файла " + filename + ".txt\n";
-//    }
-//    f >> *this;
-//    f.close();
-//    std::cout << "=============== Your field after loading ===============\n";
-//    playerField->printField();
-//    std::cout << "=============== Computer's field after loading ===============\n";
-//    compField->printField();
-//}
 
 std::vector<int> GameState::getSizes() {
     return sizes;

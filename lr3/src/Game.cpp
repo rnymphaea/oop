@@ -9,6 +9,7 @@ void Game::NewRound() {
     std::vector<int> lengths;
     bool firstRound = true;
     bool playerWon = false;
+    int state;
     if (act == 1) {
         gameState = std::make_shared<GameState>(lengths);
         gameState->load();
@@ -22,21 +23,24 @@ void Game::NewRound() {
 
     }
     while (true) {
-        playerWon = CycleGame(n, playerWon, firstRound);
+        state = CycleGame(n, playerWon, firstRound);
         firstRound = false;
-        if (playerWon) {
+        if (state == 1) {
             std::cout << "You won!" << std::endl;
+            playerWon = true;
             gameState->newCompField();
             gameState->newCompShipManager();
             continue;
-        } else {
+        } else if (state == 0) {
             gameState = std::make_shared<GameState>(lengths);
             std::cout << "You lose!" << std::endl;
+        } else {
+            break;
         }
     }
 }
 
-bool Game::CycleGame(int n, bool playerWon, bool firstRound) {
+int Game::CycleGame(int n, bool playerWon, bool firstRound) {
     playerTurn = true;
     bool stop = false;
     if (!firstRound && !playerWon && !isLoaded) {
@@ -98,9 +102,9 @@ bool Game::CycleGame(int n, bool playerWon, bool firstRound) {
 
     }
     if (stop) {
-        exit(0);
+        return 2;
     }
-    return playerWon;
+    return static_cast<int>(playerWon);
 }
 
 

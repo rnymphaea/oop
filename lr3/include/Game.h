@@ -1,10 +1,6 @@
 #ifndef LR3_GAME_H
 #define LR3_GAME_H
 
-//#include "Field.h"
-//#include "AbilityManager.h"
-//#include "ShipManager.h"
-//#include "structures.h"
 #include "GameState.h"
 
 #include <random>
@@ -18,7 +14,7 @@ enum Action {
 class Game {
 public:
     Game() = default;
-    bool CycleGame(int n, bool playerWon, bool firstRound);
+    int CycleGame(int n, bool playerWon, bool firstRound);
     void NewRound();
 private:
     bool isLoaded;
