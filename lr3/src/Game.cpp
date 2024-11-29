@@ -63,7 +63,7 @@ int Game::CycleGame(int n, bool playerWon, bool firstRound) {
     int damage = 1;
     AbilitySettings abilitySettings = {gameState->getCompField(), &damage};
     playerWon = false;
-    while (!stop && !playerWon) {
+    while (!stop && !gameEnded()) {
         if (playerTurn) {
             std::cout << "\nChoose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n 4 - Exit" << std::endl;
             Action action = getAction();
