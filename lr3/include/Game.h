@@ -5,6 +5,7 @@
 #include <random>
 #include <ctime>
 #include <memory>
+#include <exception>
 
 enum Action {
     Save, Load, Attack, Ability, Exit

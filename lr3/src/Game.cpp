@@ -15,7 +15,7 @@ void Game::NewRound() {
         try {
             gameState->load();
         }
-        catch (std::runtime_error &err) {
+        catch (std::exception &err) {
             std::cout <<"Error loading" << std::endl;
             return;
         }
@@ -86,7 +86,7 @@ int Game::CycleGame(int n, bool playerWon, bool firstRound) {
                     try {
                         gameState->load();
                     }
-                    catch (std::runtime_error &err) {
+                    catch (std::exception &err) {
                         std::cout <<"Error loading" <<std::endl;
                         break;
                     }
