@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <functional>
 
 class ShipManager;
 class AbilityManager;

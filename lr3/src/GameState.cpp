@@ -38,7 +38,6 @@ void GameState::newCompField() {
 
 std::ostream &operator<<(std::ostream &out, const GameState &state) {
     auto psm = state.getPlayerShipManager();
-
     auto csm = state.getCompShipManager();
     auto pm = state.getPlayerField();
     auto cm = state.getCompField();
@@ -46,35 +45,54 @@ std::ostream &operator<<(std::ostream &out, const GameState &state) {
     auto pships = psm->getShips();
     auto cships = csm->getShips();
     int countShips = pships.size();
-    std::cout << "Saving...\n";
-    out << "Count ships\n";
-    out << std::to_string(countShips)+"\n";
-    out << "Player ships\n";
+
+    // Для накопления данных перед хэшированием
+    std::ostringstream buffer;
+    buffer << "Count ships\n";
+    buffer << std::to_string(countShips) + "\n";
+
+    buffer << "Player ships\n";
     for (int i = 0; i < countShips; i++) {
-        out << pships[i]->getInfo() << std::endl;
+        buffer << pships[i]->getInfo() << std::endl;
     }
-    out << "Computer ships\n";
+
+    buffer << "Computer ships\n";
     for (int i = 0; i < countShips; i++) {
-        out << cships[i]->getInfo() << std::endl;
+        buffer << cships[i]->getInfo() << std::endl;
     }
-    out << "Player map\n";
+
+    buffer << "Player map\n";
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
             auto cell = pm->getCell({x, y});
-            out << static_cast<char>(cell->getValue()) << "" << std::to_string(static_cast<int>(cell->isVisible())) << " ";
+            buffer << static_cast<char>(cell->getValue()) << ""
+                   << std::to_string(static_cast<int>(cell->isVisible())) << " ";
         }
-        out << std::endl;
+        buffer << std::endl;
     }
-    out << "Computer map\n";
+
+    buffer << "Computer map\n";
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
             auto cell = cm->getCell({x, y});
-            out << static_cast<char>(cell->getValue()) << "" << std::to_string(static_cast<int>(cell->isVisible())) << " ";
+            buffer << static_cast<char>(cell->getValue()) << ""
+                   << std::to_string(static_cast<int>(cell->isVisible())) << " ";
         }
-        out << std::endl;
+        buffer << std::endl;
     }
-    out << "Abilities" << std::endl;
-    out << am->getInfo();
+
+    buffer << "Abilities" << std::endl;
+    buffer << am->getInfo();
+    buffer << std::endl;
+
+    std::string data = buffer.str();
+    std::hash<std::string> hasher;
+    size_t checksum = hasher(data);
+
+    out << data;
+
+    out << "Checksum: " << checksum << std::endl;
+
     return out;
 }
 
@@ -101,20 +119,44 @@ CellValue charToCellValue(char c) {
 
 std::istream &operator>>(std::istream &in, GameState &state) {
     std::cout << "Loading...\n";
+
+    std::ostringstream buffer;
     std::string line;
 
-    while (std::getline(in, line) && line != "Count ships") {}
+    while (std::getline(in, line)) {
+        if (line.rfind("Checksum:", 0) == 0) {
+            break;
+        }
+        buffer << line << "\n";
+    }
+
+    if (line.rfind("Checksum:", 0) != 0) {
+        throw std::runtime_error("Ошибка: контрольная сумма не найдена в файле.");
+    }
+
+    size_t fileChecksum = std::stoull(line.substr(9)); // пропускаем "Checksum: "
+
+    std::string data = buffer.str();
+    std::hash<std::string> hasher;
+    size_t calculatedChecksum = hasher(data);
+
+    if (fileChecksum != calculatedChecksum) {
+        throw std::runtime_error("Ошибка: контрольная сумма не совпадает. Данные повреждены.");
+    }
+
+    std::istringstream validData(data);
+
+    while (std::getline(validData, line) && line != "Count ships") {}
     int countShips;
-    in >> countShips;
-    std::cout << "Count ships " << countShips << std::endl;
+    validData >> countShips;
 
     state.playerField = std::make_shared<Field>();
     state.compField = std::make_shared<Field>();
 
-    while (std::getline(in, line) && line != "Player ships") {}
+    while (std::getline(validData, line) && line != "Player ships") {}
     std::vector<std::shared_ptr<Ship>> tmpPlayerShips;
     for (int i = 0; i < countShips; i++) {
-        std::getline(in, line);
+        std::getline(validData, line);
         std::vector<std::string> splitLine = splitString(line);
         int size = std::stoi(splitLine[0]);
         state.sizes.push_back(size);
@@ -123,12 +165,13 @@ std::istream &operator>>(std::istream &in, GameState &state) {
         int y = std::stoi(splitLine[3]);
         auto ship = std::make_shared<Ship>(size, orient, Coordinates{x, y});
         tmpPlayerShips.push_back(ship);
-        state.playerField->placeShip(Coordinates{x,y}, ship, orient);
+        state.playerField->placeShip(Coordinates{x, y}, ship, orient);
     }
-    while (std::getline(in, line) && line != "Computer ships") {}
+
+    while (std::getline(validData, line) && line != "Computer ships") {}
     std::vector<std::shared_ptr<Ship>> tmpCompShips;
     for (int i = 0; i < countShips; i++) {
-        std::getline(in, line);
+        std::getline(validData, line);
         std::vector<std::string> splitLine = splitString(line);
         int size = std::stoi(splitLine[0]);
         Orientation orient = static_cast<Orientation>(std::stoi(splitLine[1]));
@@ -136,29 +179,28 @@ std::istream &operator>>(std::istream &in, GameState &state) {
         int y = std::stoi(splitLine[3]);
         auto ship = std::make_shared<Ship>(size, orient, Coordinates{x, y});
         tmpCompShips.push_back(ship);
-        state.compField->placeShip(Coordinates{x,y}, ship, orient);
+        state.compField->placeShip(Coordinates{x, y}, ship, orient);
     }
 
     state.playerShipManager = std::make_shared<ShipManager>(tmpPlayerShips);
     state.compShipManager = std::make_shared<ShipManager>(tmpCompShips);
 
-
-    while (std::getline(in, line) && line != "Player map") {}
+    while (std::getline(validData, line) && line != "Player map") {}
     for (int y = 0; y < 10; y++) {
-        std::getline(in, line);
+        std::getline(validData, line);
         std::vector<std::string> splitLine = splitString(line);
         for (int x = 0; x < 10; x++) {
             state.playerField->loadCellValue(
                     Coordinates{x, y},
                     charToCellValue(splitLine[x][0]),
                     static_cast<bool>(splitLine[x][1])
-                    );
+            );
         }
     }
 
-    while (std::getline(in, line) && line != "Computer map") {}
+    while (std::getline(validData, line) && line != "Computer map") {}
     for (int y = 0; y < 10; y++) {
-        std::getline(in, line);
+        std::getline(validData, line);
         std::vector<std::string> splitLine = splitString(line);
         for (int x = 0; x < 10; x++) {
             bool visible = splitLine[x][1] == '1';
@@ -170,11 +212,10 @@ std::istream &operator>>(std::istream &in, GameState &state) {
         }
     }
 
-
-    while (std::getline(in, line) && line != "Abilities") {}
+    while (std::getline(validData, line) && line != "Abilities") {}
 
     std::string abilitiesInfo;
-    std::getline(in, abilitiesInfo);
+    std::getline(validData, abilitiesInfo);
     auto info = splitString(abilitiesInfo);
     state.abilityManager = std::make_shared<AbilityManager>(info);
     return in;
