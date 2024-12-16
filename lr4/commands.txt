@@ -1,0 +1,5 @@
+Load v
+Attack z
+Ability a
+Field s
+Exit h
