@@ -24,6 +24,8 @@ public:
     std::vector<int> getLengths(int n);
     int getNumberShips();
 
+    Coordinates getCoordinates();
+
 
 private:
     void loadFromFile(const std::string& filename = "commands.txt");

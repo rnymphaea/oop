@@ -128,61 +128,7 @@ void Game::newGame(const std::vector<int>& lengths) {
 //}
 //
 //
-Coordinates Game::getCoordinates() {
-    Coordinates coords;
-    while (true) {
-        if (!(std::cin >> coords.x)) {
-            std::cout << "Error: Invalid input for x-coordinate.\n";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-        if (!(std::cin >> coords.y)) {
-            std::cout << "Error: Invalid input for y-coordinate.\n";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-        break;
-    }
-    return coords;
-}
-//
-//Action Game::getAction() {
-//    int action;
-//    bool validInput = false;
-//
-//    while (!validInput) {
-//        std::cin >> action;
-//
-//        if (std::cin.fail() || action < 0 || action > 4) {
-//            std::cout << "Enter a number between 0 and 4" << std::endl;
-//            std::cin.clear();
-//            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-//        } else {
-//            validInput = true;
-//        }
-//    }
-//    return static_cast<Action>(action);
-//}
-//
-//std::vector<int> Game::getLengths(int n) {
-//    std::vector<int> lengths(n);
-//
-//    std::cout << "Ship sizes: ";
-//    for (int i = 0; i < n; i++) {
-//        std::cin >> lengths[i];
-//    }
-//    return lengths;
-//}
-//
-//int Game::getNumberShips() {
-//    int n;
-//    std::cout << "Count of ships: ";
-//    std::cin >> n;
-//    return n;
-//}
-//
+
 void Game::placeShips(int size) {
     std::shared_ptr<Field> field;
     Coordinates coords;
@@ -256,40 +202,64 @@ Orientation Game::getOrientation() {
     return static_cast<Orientation>(orientation);
 }
 //
-//bool Game::attack(int damage) {
-//    Coordinates coords;
-//    std::shared_ptr<Field> field;
-//    if (playerTurn) {
-//        std::cout << "Enter coordinates for attack: ";
-//        coords = getCoordinates();
-//        field = gameState->getCompField();
-//        try {
-//            field->attack(coords, damage);
-//            auto ship = gameState->getCompShipManager()->getShipByCoordinates({coords});
-//            if (ship) {
-//                if (ship->isDestroyed()) {
-//                    std::cout << "Ability added! " << std::endl;
-//                    gameState->getAbilityManager()->addAbility();
-//                }
-//            }
-//
-//            std::cout << "Attack ended!" << std::endl;
-//        }
-//        catch (InvalidAttackError & err) {
-//            std::cout << err.what() << std::endl;
-//        }
-//        field->printField();
-//    }
-//    else {
-//        field = gameState->getPlayerField();
-//        coords = getRandomCoordinates();
-//        std::cout << "Computer attacks " << coords.x << " " << coords.y << std::endl;
-//        field->attack(coords);
-//    }
-//    playerTurn = !playerTurn;
-//    return gameEnded();
-//}
-//
+bool Game::attack(Coordinates coords, int damage) {
+    std::shared_ptr<Field> field;
+    if (playerTurn) {
+        field = gameState->getCompField();
+        try {
+            field->attack(coords, damage);
+            auto ship = gameState->getCompShipManager()->getShipByCoordinates({coords});
+            if (ship) {
+                if (ship->isDestroyed()) {
+                    std::cout << "Ability added! " << std::endl;
+                    gameState->getAbilityManager()->addAbility();
+                }
+            }
+            std::cout << "Attack ended!" << std::endl;
+        }
+        catch (InvalidAttackError & err) {
+            std::cout << err.what() << std::endl;
+        }
+    }
+    else {
+        field = gameState->getPlayerField();
+        coords = getRandomCoordinates();
+        std::cout << "Computer attacks " << coords.x << " " << coords.y << std::endl;
+        field->attack(coords);
+    }
+    playerTurn = !playerTurn;
+    return gameEnded();
+}
+
+bool Game::ability(const AbilitySettings& abilitySettings) {
+    auto abilityManager = gameState->getAbilityManager();
+    abilityManager->useNextAbility(abilitySettings);
+    playerTurn = true;
+    return gameEnded();
+}
+
+
+Coordinates Game::getCoordinates() {
+    Coordinates coords;
+    while (true) {
+        if (!(std::cin >> coords.x)) {
+            std::cout << "Error: Invalid input for x-coordinate.\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        if (!(std::cin >> coords.y)) {
+            std::cout << "Error: Invalid input for y-coordinate.\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        break;
+    }
+    return coords;
+}
+
+
 Coordinates Game::getRandomCoordinates() {
     std::srand(static_cast<unsigned int>(std::time(0)));
     int x = std::rand() % 10;
@@ -305,8 +275,19 @@ std::shared_ptr<Field> Game::getCompField() const {
     return gameState->getCompField();
 }
 
-//
-//bool Game::gameEnded() {
-//    return gameState->getCompShipManager()->allShipsDestroyed() || gameState->getPlayerShipManager()->allShipsDestroyed();
-//
-//}
+void Game::save() {
+    gameState->save();
+}
+
+void Game::load() {
+    if (!gameState) {
+        std::vector<int> lengths;
+        gameState = std::make_shared<GameState>(lengths);
+    }
+    gameState->load();
+}
+
+
+bool Game::gameEnded() {
+    return gameState->getCompShipManager()->allShipsDestroyed() || gameState->getPlayerShipManager()->allShipsDestroyed();
+}

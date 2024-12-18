@@ -19,6 +19,13 @@ public:
     std::shared_ptr<Field> getPlayerField() const;
     std::shared_ptr<Field> getCompField() const;
 
+    bool attack(Coordinates coords, int damage = 1);
+    bool ability(const AbilitySettings& abilitySettings);
+
+    void save();
+    void load();
+
+
 //    int CycleGame(int n, bool playerWon, bool firstRound);
 //    void NewRound();
 private:
@@ -33,7 +40,7 @@ private:
     void placeShips(int size);
     Orientation getOrientation();
 //    bool attack(int damage = 1);
-//    bool gameEnded();
+    bool gameEnded();
     Coordinates getRandomCoordinates();
 };
 

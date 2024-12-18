@@ -17,7 +17,7 @@ class Field;
 
 class GameState {
 public:
-    explicit GameState(std::vector<int> lengths);
+    GameState(std::vector<int> lengths);
 
     std::shared_ptr<ShipManager> getPlayerShipManager() const;
     std::shared_ptr<ShipManager> getCompShipManager() const;

@@ -6,7 +6,7 @@
 class Painter {
 public:
     Painter() = default;
-    void showField(std::shared_ptr<Field> field);
+    void showField(std::shared_ptr<Field> field, bool playerTurn);
 };
 
 #endif //LR4_PAINTER_H

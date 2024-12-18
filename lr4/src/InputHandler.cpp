@@ -115,7 +115,7 @@ char InputHandler::getKeyForCommand(Command cmd) const {
 // Вывод привязок клавиш и команд
 void InputHandler::printMappings() const {
     for (const auto& [key, cmd] : keyToCommand) {
-        std::cout << "Key '" << key << "' -> Command " << commandToString(cmd) << std::endl;
+        std::cout << "Key '" << key << "' -> " << commandToString(cmd) << std::endl;
     }
 }
 
@@ -190,5 +190,26 @@ int InputHandler::getNumberShips() {
         }
     }
     return n;
+}
+
+Coordinates InputHandler::getCoordinates() {
+    std::cout << "Enter coordinates: ";
+    Coordinates coords;
+    while (true) {
+        if (!(std::cin >> coords.x)) {
+            std::cout << "Error: Invalid input for x-coordinate.\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        if (!(std::cin >> coords.y)) {
+            std::cout << "Error: Invalid input for y-coordinate.\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        break;
+    }
+    return coords;
 }
 

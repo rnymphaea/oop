@@ -1,5 +1,6 @@
 Load v
 Attack z
 Ability a
-Field s
-Exit h
+ShowField f
+Exit x
+Save s

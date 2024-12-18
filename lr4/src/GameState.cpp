@@ -229,10 +229,6 @@ void GameState::save(const std::string& filename) {
 void GameState::load(const std::string& filename) {
     FileReader reader(filename + ".txt");
     reader.getInfile() >> *this;
-    std::cout << "=============== Your field after loading ===============\n";
-    playerField->printField();
-    std::cout << "=============== Computer's field after loading ===============\n";
-    compField->printField();
 }
 
 
