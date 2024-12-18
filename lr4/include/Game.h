@@ -30,11 +30,7 @@ public:
     void save();
     void load();
 
-
-//    int CycleGame(int n, bool playerWon, bool firstRound);
-//    void NewRound();
 private:
-//    bool isLoaded;
     bool playerTurn;
     std::shared_ptr<GameState> gameState;
     Coordinates getCoordinates();

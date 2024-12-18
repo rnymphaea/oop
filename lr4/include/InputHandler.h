@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <vector>
-#include "File.h"  // Подключение класса FileReader
+#include "File.h"
 #include "structures.h"
 
 class InputHandler {
@@ -31,8 +31,8 @@ private:
     void loadFromFile(const std::string& filename = "commands.txt");
     void setDefaultCommands();
 
-    std::unordered_map<char, Command> keyToCommand;  // Соответствие клавиша -> команда
-    std::unordered_map<Command, char> commandToKey;  // Соответствие команда -> клавиша
+    std::unordered_map<char, Command> keyToCommand;
+    std::unordered_map<Command, char> commandToKey;
 
     Command stringToCommand(const std::string& commandStr) const;
     std::string commandToString(Command cmd) const;

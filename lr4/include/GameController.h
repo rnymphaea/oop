@@ -24,9 +24,9 @@ private:
     void executeStartCommand(StartCommand cmd);
     RoundResult executeCommand(Command cmd);
 
-    std::shared_ptr<Game> game;                      // Разделяемый указатель на объект Game
-    std::shared_ptr<InputHandlerType> inputHandler;  // Разделяемый указатель на InputHandlerType
-    std::shared_ptr<PainterType> painter;           // Разделяемый указатель на PainterType
+    std::shared_ptr<Game> game;
+    std::shared_ptr<InputHandlerType> inputHandler;
+    std::shared_ptr<PainterType> painter;
 };
 
 #endif // LR4_GAMECONTROLLER_H
