@@ -8,126 +8,12 @@ void Game::newGame(const std::vector<int>& lengths) {
     placeShips(lengths.size());
 }
 
-//void Game::NewRound() {
-//    std::cout << "============= Battleship =============" << std::endl;
-//    std::cout << "0 - New game\n1 - Load game" << std::endl;
-//    int act;
-//    std::cin >> act;
-//    int n;
-//    std::vector<int> lengths;
-//    bool firstRound = true;
-//    bool playerWon = false;
-//    int state;
-//    if (act == 1) {
-//        gameState = std::make_shared<GameState>(lengths);
-//        try {
-//            gameState->load();
-//        }
-//        catch (std::exception &err) {
-//            std::cout <<"Error loading" << std::endl;
-//            return;
-//        }
-//        isLoaded = true;
-//        n = gameState->getPlayerShipManager()->getShips().size();
-//        lengths = gameState->getSizes();
-//    } else {
-//        n = getNumberShips();
-//        lengths = getLengths(n);
-//        gameState = std::make_shared<GameState>(lengths);
-//
-//    }
-//    while (true) {
-//        state = CycleGame(n, playerWon, firstRound);
-//        firstRound = false;
-//        if (state == 1) {
-//            std::cout << "You won!" << std::endl;
-//            playerWon = true;
-//            gameState->newCompField();
-//            gameState->newCompShipManager();
-//            continue;
-//        } else if (state == 0) {
-//            gameState = std::make_shared<GameState>(lengths);
-//            std::cout << "You lose!" << std::endl;
-//        } else {
-//            break;
-//        }
-//    }
-//}
-//
-//int Game::CycleGame(int n, bool playerWon, bool firstRound) {
-//    playerTurn = true;
-//    bool stop = false;
-//    if (!firstRound && !playerWon && !isLoaded) {
-//        n = getNumberShips();
-//        auto lengths = getLengths(n);
-//    }
-//
-//    auto playerShips = gameState->getPlayerShipManager()->getShips();
-//    auto compShips = gameState->getCompShipManager()->getShips();
-//    auto abilityManager = gameState->getAbilityManager();
-//
-//    if ((firstRound || (!firstRound && !playerWon)) && !isLoaded) {
-//        placeShips(n);
-//    }
-//    if (!isLoaded) {
-//        playerTurn = !playerTurn;
-//        placeShips(n);
-//    }
-//
-//    int damage = 1;
-//    AbilitySettings abilitySettings = {gameState->getCompField(), &damage};
-//    playerWon = false;
-//    while (!stop && !gameEnded()) {
-//        if (playerTurn) {
-//            std::cout << "\nChoose action:\n 0 - Save\n 1 - Load\n 2 - Attack\n 3 - Ability\n 4 - Exit" << std::endl;
-//            Action action = getAction();
-//            switch (action) {
-//                case Attack:
-//                    playerWon = attack();
-//                    break;
-//                case Save:
-//                    std::cout << "Saving" << std::endl;
-//                    gameState->save();
-//                    break;
-//                case Load:
-//                    std::cout << "Loading" << std::endl;
-//                    try {
-//                        gameState->load();
-//                    }
-//                    catch (std::exception &err) {
-//                        std::cout <<"Error loading" <<std::endl;
-//                        break;
-//                    }
-//                    break;
-//                case Ability:
-//                    try {
-//                        abilityManager->useNextAbility(abilitySettings);
-//                    }
-//                    catch (NoAbilitiesError& err) {
-//                        std::cout << err.what() << std::endl;
-//                        break;
-//                    }
-//                    playerWon = attack(damage);
-//                    damage = 1;
-//                    break;
-//                case Exit:
-//                    std::cout << "Bye <3" << std::endl;
-//                    stop = true;
-//                    break;
-//            }
-//        } else {
-//            attack();
-//        }
-//
-//
-//    }
-//    if (stop) {
-//        return 2;
-//    }
-//    return static_cast<int>(playerWon);
-//}
-//
-//
+void Game::newRound() {
+    playerTurn = false;
+    auto sizes = gameState->getSizes();
+    gameState->newCompField();
+    placeShips(sizes.size());
+}
 
 void Game::placeShips(int size) {
     std::shared_ptr<Field> field;
@@ -201,8 +87,8 @@ Orientation Game::getOrientation() {
     }
     return static_cast<Orientation>(orientation);
 }
-//
-bool Game::attack(Coordinates coords, int damage) {
+
+RoundResult Game::attack(Coordinates coords, int damage) {
     std::shared_ptr<Field> field;
     if (playerTurn) {
         field = gameState->getCompField();
@@ -288,6 +174,12 @@ void Game::load() {
 }
 
 
-bool Game::gameEnded() {
-    return gameState->getCompShipManager()->allShipsDestroyed() || gameState->getPlayerShipManager()->allShipsDestroyed();
+RoundResult Game::gameEnded() {
+    if (gameState->getCompShipManager()->allShipsDestroyed()) {
+        return PlayerWon;
+    }
+    if (gameState->getPlayerShipManager()->allShipsDestroyed()) {
+        return ComputerWon;
+    }
+    return GameActive;
 }

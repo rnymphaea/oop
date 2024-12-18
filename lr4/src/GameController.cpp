@@ -17,11 +17,24 @@ void GameController<InputHandlerType, PainterType>::round() {
     bool end = false;
     while (!end) {
         Command cmd = inputHandler->getCommand();
-        if (cmd == Exit) {
-            end = true;
-        }
-        else {
-            executeCommand(cmd);
+        auto res = executeCommand(cmd);
+        switch (res) {
+            case PlayerWon:
+                std::cout << "player won!" << std::endl;
+                game->newRound();
+                break;
+            case ComputerWon: {
+                std::cout << "computer won!" << std::endl;
+                int n = inputHandler->getNumberShips();
+                auto lengths = inputHandler->getLengths(n);
+                game->newGame(lengths);
+                break;
+            }
+            case GameActive:
+                continue;
+            case Quit:
+                end = true;
+                break;
         }
     }
 }
@@ -53,7 +66,8 @@ void GameController<InputHandlerType, PainterType>::executeStartCommand(StartCom
 }
 
 template <typename InputHandlerType, typename PainterType>
-void GameController<InputHandlerType, PainterType>::executeCommand(Command cmd) {
+RoundResult GameController<InputHandlerType, PainterType>::executeCommand(Command cmd) {
+    RoundResult res;
     switch (cmd) {
         case Save:
             game->save();
@@ -71,8 +85,14 @@ void GameController<InputHandlerType, PainterType>::executeCommand(Command cmd) 
             break;
         case Attack: {
             Coordinates coords = inputHandler->getCoordinates();
-            game->attack(coords);
-            game->attack(coords);
+            res = game->attack(coords);
+            if (res != GameActive) {
+                return res;
+            }
+            res = game->attack(coords);
+            if (res != GameActive) {
+                return res;
+            }
             painter->showField(game->getCompField(), false);
             break;
         }
@@ -83,25 +103,30 @@ void GameController<InputHandlerType, PainterType>::executeCommand(Command cmd) 
             int damage = 1;
             AbilitySettings abilitySettings{game->getCompField(), &damage};
             try {
-                std::cout << *abilitySettings.damage << std::endl;
                 game->ability(abilitySettings);
                 Coordinates coords = inputHandler->getCoordinates();
 
-                game->attack(coords, *abilitySettings.damage); // player turn
-                game->attack(coords); // computer turn
-
+                res = game->attack(coords, *abilitySettings.damage); // player turn
+                if (res != GameActive) {
+                    return res;
+                }
+                res = game->attack(coords); // computer turn
+                if (res != GameActive) {
+                    return res;
+                }
                 *abilitySettings.damage = 1;
 
                 painter->showField(game->getCompField(), false);
             }
-            catch (std::exception & err) {
+            catch (NoAbilitiesError& err) {
                 std::cout << err.what() << std::endl;
             }
             break;
         }
         case Exit:
             std::cout << "Exit" << std::endl;
-            return;
+            res = Quit;
+            return res;
         default:
             std::cout << "Unknown command!" << std::endl;
     }

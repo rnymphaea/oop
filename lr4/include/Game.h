@@ -8,18 +8,23 @@
 #include <memory>
 #include <exception>
 
-//enum Action {
-//    Save, Load, Attack, Ability, Exit
-//};
+enum RoundResult {
+    GameActive,
+    PlayerWon,
+    ComputerWon,
+    Quit
+};
 
 class Game {
 public:
     Game() = default;
     void newGame(const std::vector<int>& lengths);
+    void newRound();
+
     std::shared_ptr<Field> getPlayerField() const;
     std::shared_ptr<Field> getCompField() const;
 
-    bool attack(Coordinates coords, int damage = 1);
+    RoundResult attack(Coordinates coords, int damage = 1);
     bool ability(const AbilitySettings& abilitySettings);
 
     void save();
@@ -33,14 +38,11 @@ private:
     bool playerTurn;
     std::shared_ptr<GameState> gameState;
     Coordinates getCoordinates();
-//    Action getAction();
-//    void save();
-//    std::vector<int> getLengths(int n);
-//    int getNumberShips();
+
     void placeShips(int size);
     Orientation getOrientation();
-//    bool attack(int damage = 1);
-    bool gameEnded();
+
+    RoundResult gameEnded();
     Coordinates getRandomCoordinates();
 };
 

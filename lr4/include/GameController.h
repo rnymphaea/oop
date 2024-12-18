@@ -6,6 +6,7 @@
 #include "Painter.h"
 #include <memory>
 
+
 template <typename InputHandlerType, typename PainterType>
 class GameController {
 public:
@@ -21,7 +22,7 @@ public:
 
 private:
     void executeStartCommand(StartCommand cmd);
-    void executeCommand(Command cmd);
+    RoundResult executeCommand(Command cmd);
 
     std::shared_ptr<Game> game;                      // Разделяемый указатель на объект Game
     std::shared_ptr<InputHandlerType> inputHandler;  // Разделяемый указатель на InputHandlerType

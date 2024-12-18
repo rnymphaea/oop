@@ -114,6 +114,7 @@ CellValue charToCellValue(char c) {
         case 'S': return CellValue::Segment;
         case 'W': return CellValue::Hit;
         case 'X': return CellValue::Destroyed;
+        default: return CellValue::Empty;
     }
 }
 
