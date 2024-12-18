@@ -12,6 +12,7 @@ void Game::newRound() {
     playerTurn = false;
     auto sizes = gameState->getSizes();
     gameState->newCompField();
+    gameState->newCompShipManager();
     placeShips(sizes.size());
 }
 
@@ -33,9 +34,9 @@ void Game::placeShips(int size) {
         bool isPlaced = false;
         while (!isPlaced) {
             if (playerTurn) {
-                std::cout << "Введите координаты для корабля длины " << ships[i]->getLength() << ": ";
+                std::cout << "Enter coordinates for ship with length " << ships[i]->getLength() << ": ";
                 coords = getCoordinates();
-                std::cout << "Выберите расположение корабля:\n 0 - Vertical\n 1 - Horizontal" << std::endl;
+                std::cout << "Orientation:\n 0 - Vertical\n 1 - Horizontal" << std::endl;
                 orientation = getOrientation();
             }
             else {
@@ -97,11 +98,9 @@ RoundResult Game::attack(Coordinates coords, int damage) {
             auto ship = gameState->getCompShipManager()->getShipByCoordinates({coords});
             if (ship) {
                 if (ship->isDestroyed()) {
-                    std::cout << "Ability added! " << std::endl;
                     gameState->getAbilityManager()->addAbility();
                 }
             }
-            std::cout << "Attack ended!" << std::endl;
         }
         catch (InvalidAttackError & err) {
             std::cout << err.what() << std::endl;
@@ -127,7 +126,8 @@ bool Game::ability(const AbilitySettings& abilitySettings) {
 
 Coordinates Game::getCoordinates() {
     Coordinates coords;
-    while (true) {
+    bool validInput = false;
+    while (!validInput) {
         if (!(std::cin >> coords.x)) {
             std::cout << "Error: Invalid input for x-coordinate.\n";
             std::cin.clear();
@@ -140,7 +140,7 @@ Coordinates Game::getCoordinates() {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
-        break;
+        validInput = true;
     }
     return coords;
 }

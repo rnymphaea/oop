@@ -103,7 +103,6 @@ Command InputHandler::getCommandForKey(char key) const {
     return Unknown;
 }
 
-// Получение клавиши по команде
 char InputHandler::getKeyForCommand(Command cmd) const {
     auto it = commandToKey.find(cmd);
     if (it != commandToKey.end()) {
@@ -112,7 +111,6 @@ char InputHandler::getKeyForCommand(Command cmd) const {
     throw std::runtime_error("No key assigned to command " + commandToString(cmd));
 }
 
-// Вывод привязок клавиш и команд
 void InputHandler::printMappings() const {
     for (const auto& [key, cmd] : keyToCommand) {
         std::cout << "Key '" << key << "' -> " << commandToString(cmd) << std::endl;
@@ -158,7 +156,8 @@ std::vector<int> InputHandler::getLengths(int n) {
 
     std::cout << "Enter sizes of " << n << " ships:\n";
     for (int i = 0; i < n; i++) {
-        while (true) {
+        bool validInput = false;
+        while (!validInput) {
             std::cout << "Size of ship " << i + 1 << ": ";
             std::cin >> lengths[i];
 
@@ -167,7 +166,7 @@ std::vector<int> InputHandler::getLengths(int n) {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "Invalid size. Please enter a positive integer.\n";
             } else {
-                break;
+                validInput = true;
             }
         }
     }
@@ -176,8 +175,8 @@ std::vector<int> InputHandler::getLengths(int n) {
 
 int InputHandler::getNumberShips() {
     int n;
-
-    while (true) {
+    bool validInput = false;
+    while (!validInput) {
         std::cout << "Enter the count of ships: ";
         std::cin >> n;
 
@@ -186,7 +185,7 @@ int InputHandler::getNumberShips() {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Invalid number. Please enter a positive integer.\n";
         } else {
-            break;
+            validInput = true;
         }
     }
     return n;
@@ -195,7 +194,8 @@ int InputHandler::getNumberShips() {
 Coordinates InputHandler::getCoordinates() {
     std::cout << "Enter coordinates: ";
     Coordinates coords;
-    while (true) {
+    bool validInput = false;
+    while (!validInput) {
         if (!(std::cin >> coords.x)) {
             std::cout << "Error: Invalid input for x-coordinate.\n";
             std::cin.clear();
@@ -208,7 +208,7 @@ Coordinates InputHandler::getCoordinates() {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
-        break;
+        validInput = true;
     }
     return coords;
 }

@@ -7,7 +7,7 @@ void GameController<InputHandlerType, PainterType>::init() {
 
 template <typename InputHandlerType, typename PainterType>
 void GameController<InputHandlerType, PainterType>::startGame() {
-    std::cout << "============= Battleship =============" << std::endl;
+    painter -> printMessage("============= Battleship =============");
     StartCommand cmd = inputHandler->getStartCommand();
     executeStartCommand(cmd);
 }
@@ -20,11 +20,11 @@ void GameController<InputHandlerType, PainterType>::round() {
         auto res = executeCommand(cmd);
         switch (res) {
             case PlayerWon:
-                std::cout << "player won!" << std::endl;
+                painter -> printMessage("Player won!");
                 game->newRound();
                 break;
             case ComputerWon: {
-                std::cout << "computer won!" << std::endl;
+                painter -> printMessage("Computer won!");
                 int n = inputHandler->getNumberShips();
                 auto lengths = inputHandler->getLengths(n);
                 game->newGame(lengths);
@@ -57,11 +57,11 @@ void GameController<InputHandlerType, PainterType>::executeStartCommand(StartCom
                 round();
             }
             catch (std::exception& err) {
-                std::cout << "Cannot load from file: " << err.what() << std::endl;
+                painter -> printMessage(err.what());
             }
             break;
         default:
-            std::cout << "Unknown command!" << std::endl;
+            painter -> printMessage("Unknown command!");
     }
 }
 
@@ -80,7 +80,7 @@ RoundResult GameController<InputHandlerType, PainterType>::executeCommand(Comman
                 painter->showField(game->getCompField(), false);
             }
             catch (std::exception& err) {
-                std::cout << "Cannot load from file: " << err.what() << std::endl;
+                painter -> printMessage(err.what());
             }
             break;
         case Attack: {
@@ -124,13 +124,11 @@ RoundResult GameController<InputHandlerType, PainterType>::executeCommand(Comman
             break;
         }
         case Exit:
-            std::cout << "Exit" << std::endl;
             res = Quit;
             return res;
         default:
-            std::cout << "Unknown command!" << std::endl;
+            painter -> printMessage("Unknown command!");
     }
 }
 
-// Явное инстанциирование шаблона для InputHandler и Painter
 template class GameController<InputHandler, Painter>;

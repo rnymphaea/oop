@@ -9,3 +9,7 @@ void Painter::showField(std::shared_ptr<Field> field, bool playerTurn) {
     }
     field->printField();
 }
+
+void Painter::printMessage(std::string message) {
+    std::cout << message << std::endl;
+}
