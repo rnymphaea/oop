@@ -19,6 +19,37 @@ public:
     void printMessage(const std::string& message) {
         std::cout << message << std::endl;
     }
+
+    void printMappings(const std::unordered_map<char, Command> keyToCommand) {
+
+        for (const auto& [key, cmd] : keyToCommand) {
+            std::string command;
+            switch (cmd) {
+                case Save:
+                    command = "Save";
+                    break;
+                case Load:
+                    command = "Load";
+                    break;
+                case Attack:
+                    command = "Attack";
+                    break;
+                case Ability:
+                    command = "Ability";
+                    break;
+                case ShowField:
+                    command = "ShowField";
+                    break;
+                case Exit:
+                    command = "Exit";
+                    break;
+                default:
+                    command = "Unknown";
+                    break;
+            }
+            std::cout << "Key '" << key << "' -> " << command << std::endl;
+        }
+    }
 };
 
 #endif // LR4_TERMINALPAINTER_H

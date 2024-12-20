@@ -16,6 +16,7 @@ template <typename InputHandlerType, typename PainterType>
 void GameController<InputHandlerType, PainterType>::round() {
     bool end = false;
     while (!end) {
+        painter->printMappings(inputHandler->getMappings());
         Command cmd = inputHandler->getCommand();
         auto res = executeCommand(cmd);
         switch (res) {
@@ -50,6 +51,7 @@ void GameController<InputHandlerType, PainterType>::executeStartCommand(StartCom
             break;
         }
         case StartCommand::LoadGame:
+            painter->printMessage("Loading...");
             try {
                 game->load();
                 painter->showField(game->getPlayerField(), true);
@@ -70,10 +72,11 @@ RoundResult GameController<InputHandlerType, PainterType>::executeCommand(Comman
     RoundResult res;
     switch (cmd) {
         case Save:
+            painter->printMessage("Saving...");
             game->save();
             break;
         case Load:
-            std::cout << "Load" << std::endl;
+            painter->printMessage("Loading...");
             try {
                 game->load();
                 painter->showField(game->getPlayerField(), true);

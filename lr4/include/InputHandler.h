@@ -16,7 +16,6 @@ public:
     StartCommand getStartCommandForKey(int key) const;
     Command getCommandForKey(char key) const;
     char getKeyForCommand(Command cmd) const;
-    void printMappings() const;
 
     StartCommand getStartCommand();
     Command getCommand();
@@ -25,6 +24,7 @@ public:
     int getNumberShips();
 
     Coordinates getCoordinates();
+    std::unordered_map<char, Command> getMappings();
 
 
 private:

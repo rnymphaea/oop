@@ -119,8 +119,6 @@ CellValue charToCellValue(char c) {
 }
 
 std::istream &operator>>(std::istream &in, GameState &state) {
-    std::cout << "Loading...\n";
-
     std::ostringstream buffer;
     std::string line;
 
@@ -132,7 +130,7 @@ std::istream &operator>>(std::istream &in, GameState &state) {
     }
 
     if (line.rfind("Checksum:", 0) != 0) {
-        throw std::runtime_error("Ошибка: контрольная сумма не найдена в файле.");
+        throw std::runtime_error("Error: checksum not in file");
     }
 
     size_t fileChecksum = std::stoull(line.substr(9)); // пропускаем "Checksum: "
@@ -142,7 +140,7 @@ std::istream &operator>>(std::istream &in, GameState &state) {
     size_t calculatedChecksum = hasher(data);
 
     if (fileChecksum != calculatedChecksum) {
-        throw std::runtime_error("Ошибка: контрольная сумма не совпадает. Данные повреждены.");
+        throw std::runtime_error("Error: checksum is incorrect");
     }
 
     std::istringstream validData(data);

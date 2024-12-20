@@ -111,12 +111,6 @@ char InputHandler::getKeyForCommand(Command cmd) const {
     throw std::runtime_error("No key assigned to command " + commandToString(cmd));
 }
 
-void InputHandler::printMappings() const {
-    for (const auto& [key, cmd] : keyToCommand) {
-        std::cout << "Key '" << key << "' -> " << commandToString(cmd) << std::endl;
-    }
-}
-
 StartCommand InputHandler::getStartCommand() {
     StartCommand cmd = StartCommand::Unknown;
     int key;
@@ -138,7 +132,7 @@ StartCommand InputHandler::getStartCommand() {
 }
 
 Command InputHandler::getCommand() {
-    printMappings();
+//    printMappings();
     std::cout << std::endl;
     std::cout << "Enter a key for a command: ";
     char key;
@@ -213,3 +207,6 @@ Coordinates InputHandler::getCoordinates() {
     return coords;
 }
 
+std::unordered_map<char, Command> InputHandler::getMappings() {
+    return keyToCommand;
+};

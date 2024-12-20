@@ -19,6 +19,10 @@ public:
         renderer->printMessage(message);
     }
 
+    void printMappings(const std::unordered_map<char, Command> keyToCommand) {
+        renderer->printMappings(keyToCommand);
+    }
+
 private:
     std::shared_ptr<RenderStrategy> renderer;
 };
