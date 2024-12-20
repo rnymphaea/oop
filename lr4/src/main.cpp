@@ -6,5 +6,3 @@ int main() {
     gameController.startGame();
     return 0;
 }
-
-
