@@ -131,4 +131,4 @@ RoundResult GameController<InputHandlerType, PainterType>::executeCommand(Comman
     }
 }
 
-template class GameController<InputHandler, Painter>;
+template class GameController<InputHandler, Painter<TerminalPainter>>;

@@ -7,17 +7,13 @@
 #include "../include/InputHandler.h"
 #include "../include/Painter.h"
 #include "../include/GameController.h"
+#include "../include/TerminalPainter.h"
 
 int main() {
-//    Game game;
-//    game.NewRound();
-//    InputHandler ih;
-//    ih.init();
-//    Game game;
-    GameController<InputHandler, Painter> gameController;
+    GameController<InputHandler, Painter<TerminalPainter>> gameController;
     gameController.init();
     gameController.startGame();
-//    ih.printMappings();
+    return 0;
 }
 
 

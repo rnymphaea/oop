@@ -161,10 +161,10 @@ std::vector<int> InputHandler::getLengths(int n) {
             std::cout << "Size of ship " << i + 1 << ": ";
             std::cin >> lengths[i];
 
-            if (std::cin.fail() || lengths[i] <= 0) {
+            if (std::cin.fail() || lengths[i] <= 0 || lengths[i] > 4) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid size. Please enter a positive integer.\n";
+                std::cout << "Invalid size. Please enter a positive integer between 1 and 4.\n";
             } else {
                 validInput = true;
             }
